@@ -1,3 +1,6 @@
+// play.js
+
+
 class Play extends Phaser.Scene {
   constructor() {
     super("playScene");
@@ -5,14 +8,16 @@ class Play extends Phaser.Scene {
 
   preload() {
       // load images and tile sprites
-
       this.load.image('bird', './assets/phoenix2.png');
-      this.load.image('cloud', './assets/cloud.png');
+      
+      // Load all 4 different cloud images
+      this.load.image('cloud', './assets/monster.png');
+      this.load.image('cloud2', './assets/monster2.png');
+      this.load.image('cloud3', './assets/monster3.png');
+      this.load.image('cloud4', './assets/monster4.png');
+      
       this.load.image('field', './assets/field.png');
       this.load.image('overcast', './assets/cloudsalone.png');
-
-      // load audio
-      this.load.audio('bgm', './assets/clouded_skies_bgm.wav');
 
       // load audio
       this.load.audio('bgm', './assets/clouded_skies_bgm.wav');
@@ -20,6 +25,13 @@ class Play extends Phaser.Scene {
 
       // add bird collision animation here
       this.load.spritesheet('flames', './assets/deathanimation.png', {frameWidth: 64, frameHeight: 32, startFrame:0, endFrame: 7});
+  }
+
+  // Helper function to get a random cloud texture key
+  getRandomCloudTexture() {
+    const cloudTextures = ['cloud', 'cloud2', 'cloud3', 'cloud4'];
+    const randomIndex = Phaser.Math.Between(0, cloudTextures.length - 1);
+    return cloudTextures[randomIndex];
   }
 
   create() {
@@ -30,16 +42,18 @@ class Play extends Phaser.Scene {
     //place bird
     this.player = new Bird(this, game.config.width/2, game.config.height - UISize - 45, 'bird').setOrigin(0.5, 0);
 
-    // create cloud enemies via random number generation
+    // create cloud enemies via random number generation with random textures
     let ranX = Phaser.Math.Between(50, game.config.width - 50);
     let ranY = Phaser.Math.Between(-50, -500);
-    this.enemy1 = new Cloud(this, ranX, ranY, 'cloud', 0).setOrigin(0.5, 0);
-    ranX = Phaser.Math.Between(50, game.config.width - 50);
-    ranY = Phaser.Math.Between(-50, -500)
-    this.enemy2 = new Cloud(this, ranX, ranY, 'cloud', 0).setOrigin(0.5, 0);
+    this.enemy1 = new Cloud(this, ranX, ranY, this.getRandomCloudTexture(), 0).setOrigin(0.5, 0);
+    
     ranX = Phaser.Math.Between(50, game.config.width - 50);
     ranY = Phaser.Math.Between(-50, -500);
-    this.enemy3 = new Cloud(this, ranX, ranY, 'cloud', 0).setOrigin(0.5, 0);
+    this.enemy2 = new Cloud(this, ranX, ranY, this.getRandomCloudTexture(), 0).setOrigin(0.5, 0);
+    
+    ranX = Phaser.Math.Between(50, game.config.width - 50);
+    ranY = Phaser.Math.Between(-50, -500);
+    this.enemy3 = new Cloud(this, ranX, ranY, this.getRandomCloudTexture(), 0).setOrigin(0.5, 0);
 
     //place UI bottom rectangle and separation line rectangle
     this.add.rectangle(0, game.config.height - UISize, game.config.width, UISize - 50, 0xF5F5DC).setOrigin(0,0);
@@ -65,7 +79,6 @@ class Play extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('flames', { start: 0, end: 7, first: 0}),
       frameRate: 7
     })
-
 
     // game over flag
     this.gameOver = false;
@@ -147,7 +160,6 @@ class Play extends Phaser.Scene {
       }
     }
   
-
     // checking collisions
     if (this.checkCollision(this.player, this.enemy1) || this.checkCollision(this.player, this.enemy2) || this.checkCollision(this.player, this.enemy3)) {
       this.gameOver = true;

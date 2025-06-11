@@ -10,12 +10,14 @@ class Menu extends Phaser.Scene {
     let menuConfig = {
       fontFamily: 'Georgia',
       fontSize: '16px',
-      backgroundColor: '#ADD8E6',
+      backgroundColor: '#000',
       color: '#FFFFFF',
       align: 'right',
       padding: {
         top: 5,
         bottom: 5,
+        left: 5,
+        right: 5,
       },
       fixedWidth: 0   
     }
@@ -27,6 +29,10 @@ class Menu extends Phaser.Scene {
     this.add.text(game.config.width/2, game.config.height/2.26, 'Use Space to bird call (for fun)', menuConfig).setOrigin(0.5);
     menuConfig.backgroundColor = '#00FF00';
     menuConfig.color = '#000';
+    menuConfig.padding.bottom = 10;
+    menuConfig.padding.top = 10;
+    menuConfig.padding.right = 10;
+    menuConfig.padding.left = 10;
     this.add.text(game.config.width/2, game.config.height/1.5, 'Press Space to begin', menuConfig).setOrigin(0.5);
 
     // define keys
